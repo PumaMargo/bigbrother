@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bigbrother-back", "bigbrother-back\bigbrother-back.csproj", "{473C4850-4F59-4021-9ED2-7D43794891E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{473C4850-4F59-4021-9ED2-7D43794891E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{473C4850-4F59-4021-9ED2-7D43794891E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{473C4850-4F59-4021-9ED2-7D43794891E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{473C4850-4F59-4021-9ED2-7D43794891E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D13870B-06B3-4D98-A349-765AFC2026D5}
+	EndGlobalSection
+EndGlobal
