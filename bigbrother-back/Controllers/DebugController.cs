@@ -6,24 +6,19 @@ using System.Net.Sockets;
 
 namespace bigbrother_back.Controllers
 {
-    public class DebugController : BaseController
+    public class DebugController : BaseDataContextController
     {
         #region Properties
-
-        DatabaseContext DataContext { get; init; }
-
-        ILogger<DebugController> Logger { get; init; }
 
         IWebHostEnvironment Environment { get; init; }
 
         #endregion
-        
+
         public DebugController(DatabaseContext dbContext,
                                ILogger<DebugController> logger,
                                IWebHostEnvironment environment)
+            : base(dbContext, logger)
         {
-            DataContext = dbContext;
-            Logger = logger;
             Environment = environment;
         }
 
@@ -37,7 +32,7 @@ namespace bigbrother_back.Controllers
                 return BadRequest();
             }
 
-            await DataContext.RecreateDatabaseAsync();
+            await DataModel.RecreateDatabaseAsync();
             return Ok();
         }
 
@@ -58,8 +53,8 @@ namespace bigbrother_back.Controllers
 
             var markerss = new List<Marker>()
             {
-                new Marker() { HardwareId = "rfid#Test1" },
-                new Marker() { HardwareId = "rfid#Test2" },
+                new Marker() { Signature = "rfid#Test1" },
+                new Marker() { Signature = "rfid#Test2" },
             };
 
             var places = new List<Place>()
@@ -68,10 +63,10 @@ namespace bigbrother_back.Controllers
                 new Place() { Name = "Test Place" },
             };
 
-            await DataContext.Accounts.AddRangeAsync(accounts);
-            await DataContext.Markers.AddRangeAsync(markerss);
-            await DataContext.Places.AddRangeAsync(places);
-            await DataContext.SaveChangesAsync();
+            await DataModel.Accounts.AddRangeAsync(accounts);
+            await DataModel.Markers.AddRangeAsync(markerss);
+            await DataModel.Places.AddRangeAsync(places);
+            await DataModel.SaveChangesAsync();
 
             return Ok();
         }

@@ -12,12 +12,19 @@ namespace bigbrother_back.Models.DataModel
         Customer
     }
 
+    public enum AccountSex
+    {
+        Male,
+        Female
+    }
+
     public class Account
     {
         #region Properties
 
         public int Id { get; set; }
 
+        [EmailAddress]
         [MaxLength(256)]
         public string Login { get; set; } = string.Empty;
 
@@ -29,14 +36,19 @@ namespace bigbrother_back.Models.DataModel
         [MaxLength(256)]
         public string SecondName { get; set; } = string.Empty;
 
+        public AccountSex? Sex { get; set; } = AccountSex.Male;
+
+        public DateOnly? BirthDate { get; set; }
+
+
         [MaxLength(80)]
         public string Salt { get; set; } = string.Empty;
 
-        [MaxLength(256)]
-        public string Hash { get; set; } = string.Empty;
-
         [MaxLength(80)]
         public string HashType => "sha256";
+
+        [MaxLength(256)]
+        public string Hash { get; set; } = string.Empty;
 
         public Marker? Marker { get; set; }
 

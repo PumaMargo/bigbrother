@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using bigbrother_back.Models.DataModel;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -12,7 +13,9 @@ namespace bigbrother_back.Utility
         const string jwtKey = "pKDxnlRhVMMpNWjMFYHWBgqk5rRxFMpJZ2mdEJwY";
 
         internal static string JwtIssuer => "BigBrotherSecurity";
-        internal static string JwtAudience => "BigBrother";
+        internal static string JwtRefreshAudience => "BigBrotherTokenManager";
+        internal static string JwtAccessAudience => "BigBrother";
+        internal static TimeSpan JwtRefreshExperation => TimeSpan.FromDays(90);
         internal static TimeSpan JwtAccessExperation => TimeSpan.FromMinutes(60);
         internal static SecurityKey JwtSecurityKey => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
 
@@ -57,6 +60,43 @@ namespace bigbrother_back.Utility
 
             // Return the hexadecimal string.
             return sBuilder.ToString();
+        }
+
+        internal static JwtSecurityToken BuildRefreshToken(Account account)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(nameof(Account.Id), account.Id.ToString()),
+                new Claim(ClaimTypes.Role, account.Role.ToString()),
+                new Claim(ClaimTypes.Upn, account.Login),
+            };
+
+            var jwt = new JwtSecurityToken(
+                    issuer: JwtIssuer,
+                    audience: JwtRefreshAudience,
+                    claims: claims,
+                    expires: DateTime.UtcNow.Add(JwtRefreshExperation),
+                    signingCredentials: new SigningCredentials(JwtSecurityKey, SecurityAlgorithms.HmacSha256));
+
+            return jwt;
+        }
+
+        internal static JwtSecurityToken BuildAccessToken(Account account)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(nameof(Account.Id), account.Id.ToString()),
+                new Claim(ClaimTypes.Role, account.Role.ToString()),
+            };
+
+            var jwt = new JwtSecurityToken(
+                    issuer: JwtIssuer,
+                    audience: JwtAccessAudience,
+                    claims: claims,
+                    expires: DateTime.UtcNow.Add(JwtAccessExperation),
+                    signingCredentials: new SigningCredentials(JwtSecurityKey, SecurityAlgorithms.HmacSha256));
+
+            return jwt;
         }
     }
 }
