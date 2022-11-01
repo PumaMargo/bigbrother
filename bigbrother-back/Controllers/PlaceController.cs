@@ -70,7 +70,7 @@ namespace bigbrother_back.Controllers
             var place = await DataModel.Places.FirstOrDefaultAsync(p => p.Id == id);
             if (place == null)
             {
-                return Problem("Marker not found", null, StatusCodes.Status404NotFound);
+                return Problem("Place not found", null, StatusCodes.Status404NotFound);
             }
 
             DataModel.Places.Remove(place);
@@ -98,7 +98,7 @@ namespace bigbrother_back.Controllers
             var currentPlace = await DataModel.Places.FirstOrDefaultAsync(p => p.Id == place.Id);
             if (currentPlace == null)
             {
-                return Problem("Marker not found", null, StatusCodes.Status404NotFound);
+                return Problem("Place not found", null, StatusCodes.Status404NotFound);
             }
 
             currentPlace.Name = place.Name;
