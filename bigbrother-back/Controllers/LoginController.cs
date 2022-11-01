@@ -128,7 +128,8 @@ namespace bigbrother_back.Controllers
         {
             var user = HttpContext.User;
             var claimAccountId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var account = await DataModel.Accounts.FirstOrDefaultAsync(a => a.Id == claimAccountId);
+            var account = await DataModel.Accounts.Include(a => a.Marker)
+                                                  .FirstOrDefaultAsync(a => a.Id == claimAccountId);
             if (account == null)
             {
                 return Problem("Refresh Token refers to empty account.", null, StatusCodes.Status404NotFound);

@@ -27,7 +27,8 @@ namespace bigbrother_back.Controllers
         public async Task<ActionResult<IEnumerable<MarkerResponce>>> GetListAsync([Range(1, MaxPageCount)] int? limit,
                                                                                   [Range(0, int.MaxValue)] int? offset)
         {
-            var markers = await DataModel.Markers.OrderBy(m => m.Id)
+            var markers = await DataModel.Markers.Include(m => m.Place)
+                                                 .OrderBy(m => m.Id)
                                                  .Skip(offset ?? 0)
                                                  .Take(limit ?? MaxPageCount)
                                                  .ToListAsync();
@@ -45,7 +46,8 @@ namespace bigbrother_back.Controllers
         [Authorize(Roles = $"{nameof(AccountRole.Administrator)}, {nameof(AccountRole.Manager)}")]
         public async Task<ActionResult<MarkerResponce>> GetAsync([Range(1, int.MaxValue)] int id)
         {
-            var marker = await DataModel.Markers.FirstOrDefaultAsync(m => m.Id == id);
+            var marker = await DataModel.Markers.Include(m => m.Place)
+                                                .FirstOrDefaultAsync(m => m.Id == id);
             if (marker==null)
             {
                 return Problem("Marker not found", null, StatusCodes.Status404NotFound);
