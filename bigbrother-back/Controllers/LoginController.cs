@@ -28,7 +28,7 @@ namespace bigbrother_back.Controllers
 
         [HttpPost("Salt")]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<ActionResult> GetSaltAsync(SaltRequest saltRequest)
+        public async Task<ActionResult<SaltResponce>> GetSaltAsync(SaltRequest saltRequest)
         {
             var account = await DataModel.Accounts.FirstOrDefaultAsync(a => a.Login == saltRequest.Login);
             if (account == null)
@@ -46,7 +46,7 @@ namespace bigbrother_back.Controllers
 
         [HttpPost("Hash")]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<ActionResult> LoginByHashAsync(LoginRequest loginRequest)
+        public async Task<ActionResult<LoginResponce>> LoginByHashAsync(LoginRequest loginRequest)
         {
             var account = await DataModel.Accounts.FirstOrDefaultAsync(a => a.Login == loginRequest.Login);
             if (account == null)
@@ -77,7 +77,7 @@ namespace bigbrother_back.Controllers
 
         [HttpPost("Refresh")]
         [Consumes(MediaTypeNames.Application.Json)]
-        public async Task<ActionResult> RefreshTokenAsync(RefreshRequest refsrehRequest)
+        public async Task<ActionResult<RefreshResponce>> RefreshTokenAsync(RefreshRequest refsrehRequest)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
             var claims = default(ClaimsPrincipal);
@@ -124,7 +124,7 @@ namespace bigbrother_back.Controllers
 
         [HttpGet("Me")]
         [Authorize]
-        public async Task<ActionResult> MeAsync()
+        public async Task<ActionResult<MeResponce>> MeAsync()
         {
             var user = HttpContext.User;
             var claimAccountId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
