@@ -90,6 +90,24 @@ namespace bigbrother_back.Controllers
             return Ok();
         }
 
+        [HttpPut()]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [Authorize(Roles = $"{nameof(AccountRole.Administrator)}, {nameof(AccountRole.Manager)}")]
+        public async Task<ActionResult> EditAsync(EditPlaceRequest place)
+        {
+            var currentPlace = await DataModel.Places.FirstOrDefaultAsync(p => p.Id == place.Id);
+            if (currentPlace == null)
+            {
+                return Problem("Marker not found", null, StatusCodes.Status404NotFound);
+            }
+
+            currentPlace.Name = place.Name;
+            currentPlace.Description = place.Description;
+            await DataModel.SaveChangesAsync();
+
+            return Ok();
+        }
+
         #endregion
     }
 }
