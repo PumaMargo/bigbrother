@@ -101,7 +101,7 @@ namespace bigbrother_back.Controllers
                 return Problem("Refresh Token is invalid.", null, StatusCodes.Status400BadRequest);
             }
 
-            var claimAccountId = int.Parse(claims.FindFirst(c => c.Type == nameof(Account.Id))!.Value);
+            var claimAccountId = int.Parse(claims.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
             var account = await DataModel.Accounts.FirstOrDefaultAsync(a => a.Id == claimAccountId);
             if (account == null)
             {
@@ -127,7 +127,7 @@ namespace bigbrother_back.Controllers
         public async Task<ActionResult> MeAsync()
         {
             var user = HttpContext.User;
-            var claimAccountId = int.Parse(user.FindFirst(nameof(Account.Id))!.Value);
+            var claimAccountId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var account = await DataModel.Accounts.FirstOrDefaultAsync(a => a.Id == claimAccountId);
             if (account == null)
             {

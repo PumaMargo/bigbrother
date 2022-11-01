@@ -1,9 +1,11 @@
 ﻿using bigbrother_back.DataContext;
 using bigbrother_back.Models.Api;
 using bigbrother_back.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Mime;
+using System.Security.Claims;
 
 namespace bigbrother_back.Controllers
 {
@@ -42,6 +44,37 @@ namespace bigbrother_back.Controllers
 
             marker.Place = place;
             await DataModel.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Customer my place request. Custome sends this GET request when whant to know own placement.
+        /// </summary>
+        [HttpGet("MyPlace")]
+        [Authorize]
+        public async Task<ActionResult> MyPlaceAsync()
+        {
+            var user = HttpContext.User;
+            var claimAccountId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var account = await DataModel.Accounts.FirstOrDefaultAsync(a => a.Id == claimAccountId);
+            if (account == null)
+            {
+                return Problem("Account not found.", null, StatusCodes.Status404NotFound);
+            }
+
+            var myPlace = account.Marker?.Place;
+            if (myPlace != null)
+            {
+                var res = new MyPlaceResponce() 
+                {
+                    Id = myPlace.Id,
+                    Name = myPlace.Name,
+                    Description = myPlace.Description,
+                };
+
+                return Ok(res);
+            }
 
             return Ok();
         }

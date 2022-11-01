@@ -66,9 +66,10 @@ namespace bigbrother_back.Utility
         {
             var claims = new List<Claim>
             {
-                new Claim(nameof(Account.Id), account.Id.ToString()),
                 new Claim(ClaimTypes.Role, account.Role.ToString()),
                 new Claim(ClaimTypes.Upn, account.Login),
+                new Claim(ClaimTypes.Name, account.Name),
+                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
             };
 
             var jwt = new JwtSecurityToken(
@@ -85,8 +86,8 @@ namespace bigbrother_back.Utility
         {
             var claims = new List<Claim>
             {
-                new Claim(nameof(Account.Id), account.Id.ToString()),
                 new Claim(ClaimTypes.Role, account.Role.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
             };
 
             var jwt = new JwtSecurityToken(
