@@ -10,6 +10,12 @@ namespace bigbrother_back.Models.Api
         public string MarkerSignature { get; set; } = string.Empty;
     }
 
+    public class TouchOutPlaceRequest
+    {
+        [MaxLength(256)]
+        public string MarkerSignature { get; set; } = string.Empty;
+    }
+
     public class MyPlaceResponce
     {
         public int Id { get; set; }

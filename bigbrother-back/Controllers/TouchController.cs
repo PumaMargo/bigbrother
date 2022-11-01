@@ -49,11 +49,31 @@ namespace bigbrother_back.Controllers
         }
 
         /// <summary>
+        /// IoT touch action. Place's IoT or manager sends this PUT request when Marker is release any Place position.
+        /// </summary>
+        [HttpPut("OutPlace")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        public async Task<ActionResult> OutPlaceAsync(TouchOutPlaceRequest outPlaceRequest)
+        {
+            var marker = await DataModel.Markers.FirstOrDefaultAsync(m => m.Signature == outPlaceRequest.MarkerSignature);
+            if (marker == null)
+            {
+                return Problem("Marker not found.", null, StatusCodes.Status404NotFound);
+            }
+
+            marker.Place = null;
+            await DataModel.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
+        /// <summary>
         /// Customer my place request. Custome sends this GET request when whant to know own placement.
         /// </summary>
         [HttpGet("MyPlace")]
         [Authorize]
-        public async Task<ActionResult> MyPlaceAsync()
+        public async Task<ActionResult<MyPlaceResponce>> MyPlaceAsync()
         {
             var user = HttpContext.User;
             var claimAccountId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
