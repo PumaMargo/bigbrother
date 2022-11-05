@@ -52,6 +52,8 @@ namespace bigbrother_back.Models.DataModel
 
         public Marker? Marker { get; set; }
 
+        public List<Tag>? Tags { get; set; }
+
         #endregion
 
         #region Methods

@@ -8,6 +8,10 @@ namespace bigbrother_back.Utility
     [Route("api/[controller]")]
     public class BaseController : ControllerBase
     {
+        #region Constants
+
         public const int MaxPageCount = 2000;
+
+        #endregion
     }
 }

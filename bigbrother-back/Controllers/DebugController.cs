@@ -44,6 +44,12 @@ namespace bigbrother_back.Controllers
                 return BadRequest();
             }
 
+            var tags = new List<Tag>()
+            {
+                new Tag() { TagType = TagType.Social, Name = "Middle-aged men", Sex = AccountSex.Male, AgeRange = new AgeRange() { From = 30, To = 55 } },
+                new Tag() { TagType = TagType.Social, Name = "Young women", Sex = AccountSex.Female, AgeRange = new AgeRange() { From = 18, To = 25 } },
+            };
+
             var accounts = new List<Account>()
             {
                 new Account() { Login = "margaret.kyselgova@gmail.com", Role = AccountRole.Administrator, Name = "PumaMargo"},
@@ -59,8 +65,8 @@ namespace bigbrother_back.Controllers
 
             var places = new List<Place>()
             {
-                new Place() { Name = "Welcome Place" },
-                new Place() { Name = "Test Place" },
+                new Place() { Name = "Welcome Place", Tags = new List<Tag>() { tags[0] } },
+                new Place() { Name = "Test Place", Tags = new List<Tag>() { tags[1] } },
             };
 
             await DataModel.Accounts.AddRangeAsync(accounts);

@@ -24,7 +24,7 @@ namespace bigbrother_back.Controllers
         #region Endpoints
 
         [HttpGet("List")]
-        [Authorize(Roles = $"{nameof(AccountRole.Administrator)}, {nameof(AccountRole.Manager)}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<PlaceResponce>>> GetListAsync([Range(1, MaxPageCount)] int? limit,
                                                                                  [Range(0, int.MaxValue)] int? offset)
         {
@@ -44,7 +44,7 @@ namespace bigbrother_back.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [Authorize(Roles = $"{nameof(AccountRole.Administrator)}, {nameof(AccountRole.Manager)}")]
+        [Authorize]
         public async Task<ActionResult<PlaceResponce>> GetAsync([Range(1, int.MaxValue)] int id)
         {
             var place = await DataModel.Places.FirstOrDefaultAsync(p => p.Id == id);
@@ -82,7 +82,7 @@ namespace bigbrother_back.Controllers
         [HttpPost()]
         [Consumes(MediaTypeNames.Application.Json)]
         [Authorize(Roles = $"{nameof(AccountRole.Administrator)}, {nameof(AccountRole.Manager)}")]
-        public async Task<ActionResult> CreateAsync(CreatePlaceRequest place)
+        public async Task<ActionResult> CreateAsync(CreateTagRequest place)
         {
             DataModel.Places.Add(new Place() { Name = place.Name, Description = place.Description });
             await DataModel.SaveChangesAsync();
