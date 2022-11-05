@@ -28,7 +28,8 @@ namespace bigbrother_back.Controllers
         public async Task<ActionResult<IEnumerable<PlaceResponce>>> GetListAsync([Range(1, MaxPageCount)] int? limit,
                                                                                  [Range(0, int.MaxValue)] int? offset)
         {
-            var places = await DataModel.Places.OrderBy(p => p.Id)
+            var places = await DataModel.Places.Include(p=>p.Tags)
+                                               .OrderBy(p => p.Id)
                                                .Skip(offset ?? 0)
                                                .Take(limit ?? MaxPageCount)
                                                .ToListAsync();
@@ -38,6 +39,7 @@ namespace bigbrother_back.Controllers
                 Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
+                TagIds = p.Tags?.Select(t => t.Id).ToList(),
             });
 
             return Ok(res);
@@ -47,7 +49,8 @@ namespace bigbrother_back.Controllers
         [Authorize]
         public async Task<ActionResult<PlaceResponce>> GetAsync([Range(1, int.MaxValue)] int id)
         {
-            var place = await DataModel.Places.FirstOrDefaultAsync(p => p.Id == id);
+            var place = await DataModel.Places.Include(p => p.Tags)
+                                              .FirstOrDefaultAsync(p => p.Id == id);
             if (place == null)
             {
                 return Problem("Place not found", null, StatusCodes.Status404NotFound);
@@ -58,6 +61,7 @@ namespace bigbrother_back.Controllers
                 Id = place.Id,
                 Name = place.Name,
                 Description = place.Description,
+                TagIds = place.Tags?.Select(t => t.Id).ToList(),
             };
 
             return Ok(res);

@@ -60,5 +60,7 @@ namespace bigbrother_back.Models.Api
         public DateOnly? BirthDate { get; set; }
 
         public int? MarkerId { get; set; }
+
+        public List<int>? TagIds { get; set; }
     }
 }

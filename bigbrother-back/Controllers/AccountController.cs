@@ -29,6 +29,7 @@ namespace bigbrother_back.Controllers
                                                                                    [Range(0, int.MaxValue)] int? offset)
         {
             var accounts = await DataModel.Accounts.Include(a => a.Marker)
+                                                   .Include(a => a.Tags)
                                                    .OrderBy(a => a.Id)
                                                    .Skip(offset ?? 0)
                                                    .Take(limit ?? MaxPageCount)
@@ -44,6 +45,7 @@ namespace bigbrother_back.Controllers
                 Sex = a.Sex,
                 BirthDate = a.BirthDate,
                 MarkerId = a.Marker?.Id,
+                TagIds = a.Tags?.Select(t => t.Id).ToList(),
             });
 
             return Ok(res);
@@ -54,6 +56,7 @@ namespace bigbrother_back.Controllers
         public async Task<ActionResult<AccountResponce>> GetAsync([Range(1, int.MaxValue)] int id)
         {
             var account = await DataModel.Accounts.Include(a => a.Marker)
+                                                  .Include(a => a.Tags)
                                                   .FirstOrDefaultAsync(a => a.Id == id);
             if (account == null)
             {
@@ -70,6 +73,7 @@ namespace bigbrother_back.Controllers
                 Sex = account.Sex,
                 BirthDate = account.BirthDate,
                 MarkerId = account.Marker?.Id,
+                TagIds = account.Tags?.Select(t => t.Id).ToList(),
             };
 
             return Ok(res);
