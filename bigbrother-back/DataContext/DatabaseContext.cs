@@ -17,6 +17,8 @@ namespace bigbrother_back.DataContext
 
         public DbSet<Tag> Tags { get; set; } = null!;
 
+        public DbSet<Visit> Visits { get; set; } = null!;
+
         #endregion
 
         public DatabaseContext(DbContextOptions options)

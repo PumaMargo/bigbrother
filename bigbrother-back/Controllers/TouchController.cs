@@ -1,5 +1,6 @@
 ﻿using bigbrother_back.DataContext;
 using bigbrother_back.Models.Api;
+using bigbrother_back.Models.DataModel;
 using bigbrother_back.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,25 @@ namespace bigbrother_back.Controllers
                 return Problem("Marker not found.", null, StatusCodes.Status404NotFound);
             }
 
+            var account = await DataModel.Accounts.Include(a => a.Marker)
+                                                  .Where(a => a.Marker != null)
+                                                  .FirstOrDefaultAsync(a => a.Marker!.Id == marker.Id);
+
+            if (account == null)
+            {
+                return Ok();
+            }
+
             marker.Place = place;
+
+            var visit = new Visit()
+            {
+                AccountId = account.Id,
+                PlaceId = place.Id,
+                VisitDate = DateTime.UtcNow,
+            };
+            DataModel.Visits.Add(visit);
+
             await DataModel.SaveChangesAsync();
 
             return Ok();
@@ -77,7 +96,8 @@ namespace bigbrother_back.Controllers
         {
             var user = HttpContext.User;
             var claimAccountId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var account = await DataModel.Accounts.FirstOrDefaultAsync(a => a.Id == claimAccountId);
+            var account = await DataModel.Accounts.Include(a => a.Marker)
+                                                  .FirstOrDefaultAsync(a => a.Id == claimAccountId);
             if (account == null)
             {
                 return Problem("Account not found.", null, StatusCodes.Status404NotFound);
