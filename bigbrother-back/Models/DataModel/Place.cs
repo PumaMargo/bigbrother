@@ -14,7 +14,7 @@ namespace bigbrother_back.Models.DataModel
 
         public string Description { get; set; } = string.Empty;
 
-        public List<Tag>? Tags { get; set; }
+        public List<Tag> Tags { get; set; } = new List<Tag>();
 
         #endregion
     }

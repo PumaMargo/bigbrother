@@ -88,7 +88,7 @@ namespace bigbrother_back.Controllers
 
 
         /// <summary>
-        /// Customer my place request. Custome sends this GET request when whant to know own placement.
+        /// Customer's "my place" request. Custome sends this GET request when whant to know own placement.
         /// </summary>
         [HttpGet("MyPlace")]
         [Authorize]
@@ -115,6 +115,47 @@ namespace bigbrother_back.Controllers
 
                 return Ok(res);
             }
+
+            return Ok();
+        }
+
+
+        /// <summary>
+        /// Customer's "recomendations to me" request. Custome sends this GET request when whant to know own placement.
+        /// </summary>
+        [HttpGet("MyRecomendations")]
+        [Authorize]
+        public async Task<ActionResult<MyPlaceResponce>> MyRecomendationsAsync()
+        {
+            var user = HttpContext.User;
+            var claimAccountId = int.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var account = await DataModel.Accounts.Include(a => a.Tags)
+                                                  .FirstOrDefaultAsync(a => a.Id == claimAccountId);
+            if (account == null)
+            {
+                return Problem("Account not found.", null, StatusCodes.Status404NotFound);
+            }
+
+            if (account.Tags == null)
+            {
+                return Ok();
+            }
+
+            /*var visitedPlaces = await DataModel.Places.Where(p => p.Tags != null)
+                                                      .Join(account.Tags,);
+
+            var myPlace = account.Marker?.Place;
+            if (myPlace != null)
+            {
+                var res = new MyPlaceResponce()
+                {
+                    Id = myPlace.Id,
+                    Name = myPlace.Name,
+                    Description = myPlace.Description,
+                };
+
+                return Ok(res);
+            }*/
 
             return Ok();
         }
